@@ -1,0 +1,7 @@
+.div1{
+    background-image: url('https://assets.ccbp.in/frontend/react-js/home-lg-bg.png');
+    display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;
+}
+.form{
+    display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50%; width: 50%;
+}
