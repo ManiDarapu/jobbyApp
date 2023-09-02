@@ -10,18 +10,21 @@ const Header = props => {
   }
   return (
     <nav>
-      <img
-        src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
-        alt="website logo"
-      />
-      <div>
+      <Link to="/">
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
+          alt="website logo"
+        />
+      </Link>
+      <ul>
         <Link to="/">
-          <p>Home</p>
+          <li>Home</li>
         </Link>
         <Link to="/jobs">
-          <p>Jobs</p>
+          <li>Jobs</li>
+          <li>v</li>
         </Link>
-      </div>
+      </ul>
       <button type="button" onClick={onClickLogout}>
         Logout
       </button>

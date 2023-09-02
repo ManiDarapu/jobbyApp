@@ -2,8 +2,10 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 import './index.css'
 import Loader from 'react-loader-spinner'
-import JobItem from '../JobItem'
+import {AiFillStar} from 'react-icons/ai'
+import {MdLocationOn} from 'react-icons/md'
 import Filters from '../Filters'
+import JobItemDetails from '../JobItemDetails'
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -13,7 +15,12 @@ const apiStatusConstants = {
 }
 
 class Jobs extends Component {
-  state = {jobsList: [], apiStatus: apiStatusConstants.initial}
+  state = {
+    jobsList: [],
+    apiStatus: apiStatusConstants.initial,
+    activeEmploymentId: '',
+    activeSalaryId: '',
+  }
 
   componentDidMount() {
     this.getJobs()
@@ -21,8 +28,9 @@ class Jobs extends Component {
 
   getJobs = async () => {
     this.setState({apiStatus: apiStatusConstants.inprogress})
+    const {activeEmploymentId, activeSalaryId} = this.state
     const jwtToken = Cookies.get('jwt_token')
-    const apiUrl = 'https://apis.ccbp.in/jobs'
+    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${activeEmploymentId}&minimum_package=${activeSalaryId}&search=`
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -42,7 +50,10 @@ class Jobs extends Component {
         rating: each.rating,
         title: each.title,
       }))
-      this.setState({jobsList: updatedData})
+      this.setState({
+        jobsList: updatedData,
+        apiStatus: apiStatusConstants.success,
+      })
     } else {
       this.setState({apiStatus: apiStatusConstants.failure})
     }
@@ -55,7 +66,7 @@ class Jobs extends Component {
         alt="failure view"
       />
       <h1>Oops! Something Went Wrong</h1>
-      <p>We cannot seem to find the page you are looking for.</p>
+      <p>We cannot seem to find the page you are looking for</p>
       <button type="button">Retry</button>
     </div>
   )
@@ -72,9 +83,35 @@ class Jobs extends Component {
       <div>
         <div>
           <input type="search" placeholder="search" />
-          {jobsList.map(each => (
-            <JobItem key={each.id} jobItem={each} />
-          ))}
+          <ul>
+            {jobsList.map(each => (
+              <li onClick={<JobItemDetails id={each.id} />}>
+                <div>
+                  <img src={each.companyLogoUrl} alt="company" />
+                  <div>
+                    <h1>{each.title}</h1>
+                    <div>
+                      <AiFillStar />
+                      <p>{each.rating}</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <MdLocationOn />
+                    <p>{each.location}</p>
+                    <p>{each.employmentType}</p>
+                  </div>
+                  <p>{each.packagePerAnnum}</p>
+                </div>
+                <hr />
+                <div>
+                  <h1>Description</h1>
+                  <p>{each.jobDescription}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     )
@@ -94,6 +131,14 @@ class Jobs extends Component {
     }
   }
 
+  changeEmploymentType = activeEmploymentId => {
+    this.setState({activeEmploymentId}, this.getJobs())
+  }
+
+  changeSalaryRange = activeSalaryId => {
+    this.setState({activeSalaryId}, this.getJobs())
+  }
+
   render() {
     const {employmentTypesList, salaryRangesList} = this.props
     return (
@@ -103,6 +148,8 @@ class Jobs extends Component {
           <Filters
             employmentTypesList={employmentTypesList}
             salaryRangesList={salaryRangesList}
+            changeEmploymentType={this.changeEmploymentType}
+            changeSalaryRange={this.changeSalaryRange}
           />
         </div>
       </div>

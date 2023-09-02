@@ -1,5 +1,5 @@
 import './index.css'
-import Component from 'react'
+import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 
@@ -81,20 +81,38 @@ class Filters extends Component {
 
   renderEmploymentType = () => {
     const {employmentTypesList} = this.props
-    employmentTypesList.map(each => (
-      <li key={each.employmentTypeId}>{each.label}</li>
-    ))
+    return employmentTypesList.map(each => {
+      const {changeEmploymentType} = this.props
+      const onClickEmploymentType = () => {
+        changeEmploymentType(each.id)
+      }
+      return (
+        <li onClick={onClickEmploymentType} key={each.id}>
+          {each.label}
+        </li>
+      )
+    })
   }
 
   renderSalaryRange = () => {
     const {salaryRangesList} = this.props
-    salaryRangesList.map(each => <li key={each.salaryRangeId}>{each.label}</li>)
+    salaryRangesList.map(each => {
+      const {changeSalaryRange} = this.props
+      const onClickSalaryRange = () => {
+        changeSalaryRange(each.id)
+      }
+      return (
+        <li onClick={onClickSalaryRange} key={each.id}>
+          {each.label}
+        </li>
+      )
+    })
   }
 
   render() {
     return (
       <div>
-        {this.renderProfile}
+        {this.renderProfile()}
         <hr />
         <div>
           <h1>Type of Employment</h1>

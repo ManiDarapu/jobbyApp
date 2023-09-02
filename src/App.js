@@ -1,10 +1,11 @@
 import './App.css'
-import {Switch, Route} from 'react-router-dom'
-import Login from './components/LoginForm'
+import {Switch, Route, Redirect} from 'react-router-dom'
+import LoginForm from './components/LoginForm'
 import Home from './components/Home'
-// eslint-disable-next-line import/no-named-as-default-member
 import Jobs from './components/Jobs'
 import ProtectedRoute from './components/ProtectedRoute'
+import NotFound from './components/NotFound'
+import JobItemDetails from './components/JobItemDetails'
 
 // These are the lists used in the application. You can move them to any component needed.
 const employmentTypesList = [
@@ -48,8 +49,8 @@ const salaryRangesList = [
 // Replace your code here
 const App = () => (
   <Switch>
-    <Route exact path="/login" component={Login} />
-    <ProtectedRoute exact path="/home" component={Home} />
+    <Route exact path="/login" component={LoginForm} />
+    <ProtectedRoute exact path="/" component={Home} />
     <ProtectedRoute
       exact
       path="/jobs"
@@ -57,6 +58,9 @@ const App = () => (
       employmentTypesList={employmentTypesList}
       salaryRangesList={salaryRangesList}
     />
+    <ProtectedRoute exact path="/jobs/:id" component={JobItemDetails} />
+    <Route component={NotFound} />
+    <Redirect to="notfound" />
   </Switch>
 )
 
