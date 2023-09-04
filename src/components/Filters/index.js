@@ -2,6 +2,7 @@ import './index.css'
 import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
+import {AiOutlineSearch} from 'react-icons/ai'
 
 const statusConstants = {
   initial: 'INITIAL',
@@ -87,8 +88,9 @@ class Filters extends Component {
         changeEmploymentType(each.id)
       }
       return (
-        <li onClick={onClickEmploymentType} key={each.id}>
-          {each.label}
+        <li onClick={onClickEmploymentType} key={each.employmentTypeId}>
+          <input type="checkbox" id="check" value={each.label} />
+          <label htmlFor="check">{each.label}</label>
         </li>
       )
     })
@@ -96,23 +98,32 @@ class Filters extends Component {
 
   renderSalaryRange = () => {
     const {salaryRangesList} = this.props
-    salaryRangesList.map(each => {
+    return salaryRangesList.map(each => {
       const {changeSalaryRange} = this.props
       const onClickSalaryRange = () => {
         changeSalaryRange(each.id)
       }
       return (
-        <li onClick={onClickSalaryRange} key={each.id}>
-          {each.label}
+        <li onClick={onClickSalaryRange} key={each.salaryRangeId}>
+          <label htmlFor="radio">{each.label}</label>
+          <input type="radio" id="radio" value={each.label} />
         </li>
       )
     })
   }
 
   render() {
+    const changeSearchInput = this.props
+    const onChangeSearch = event => {
+      changeSearchInput(event.target.value)
+    }
     return (
       <div>
         {this.renderProfile()}
+        <button type="button" data-testid="searchButton">
+          <input type="search" onChange={onChangeSearch} />
+          <AiOutlineSearch />
+        </button>
         <hr />
         <div>
           <h1>Type of Employment</h1>

@@ -6,6 +6,7 @@ import {AiFillStar} from 'react-icons/ai'
 import {MdLocationOn} from 'react-icons/md'
 import Filters from '../Filters'
 import JobItemDetails from '../JobItemDetails'
+import Header from '../Header'
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -20,6 +21,7 @@ class Jobs extends Component {
     apiStatus: apiStatusConstants.initial,
     activeEmploymentId: '',
     activeSalaryId: '',
+    searchInput: '',
   }
 
   componentDidMount() {
@@ -28,9 +30,9 @@ class Jobs extends Component {
 
   getJobs = async () => {
     this.setState({apiStatus: apiStatusConstants.inprogress})
-    const {activeEmploymentId, activeSalaryId} = this.state
+    const {activeEmploymentId, activeSalaryId, searchInput} = this.state
     const jwtToken = Cookies.get('jwt_token')
-    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${activeEmploymentId}&minimum_package=${activeSalaryId}&search=`
+    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${activeEmploymentId}&minimum_package=${activeSalaryId}&search=${searchInput}`
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -82,7 +84,6 @@ class Jobs extends Component {
     return (
       <div>
         <div>
-          <input type="search" placeholder="search" />
           <ul>
             {jobsList.map(each => (
               <li onClick={<JobItemDetails id={each.id} />}>
@@ -120,6 +121,8 @@ class Jobs extends Component {
   renderAll = () => {
     const {apiStatus} = this.state
     switch (apiStatus) {
+      case apiStatusConstants.initial:
+        return this.renderInprogressView()
       case apiStatusConstants.failure:
         return this.renderFailureView()
       case apiStatusConstants.inprogress:
@@ -139,18 +142,63 @@ class Jobs extends Component {
     this.setState({activeSalaryId}, this.getJobs())
   }
 
+  changeSearchInput = value => {
+    this.setState({searchInput: value}, this.getJobs())
+  }
+
   render() {
-    const {employmentTypesList, salaryRangesList} = this.props
+    const employmentTypesList = [
+      {
+        label: 'Full Time',
+        employmentTypeId: 'FULLTIME',
+      },
+      {
+        label: 'Part Time',
+        employmentTypeId: 'PARTTIME',
+      },
+      {
+        label: 'Freelance',
+        employmentTypeId: 'FREELANCE',
+      },
+      {
+        label: 'Internship',
+        employmentTypeId: 'INTERNSHIP',
+      },
+    ]
+    const salaryRangesList = [
+      {
+        salaryRangeId: '1000000',
+        label: '10 LPA and above',
+      },
+      {
+        salaryRangeId: '2000000',
+        label: '20 LPA and above',
+      },
+      {
+        salaryRangeId: '3000000',
+        label: '30 LPA and above',
+      },
+      {
+        salaryRangeId: '4000000',
+        label: '40 LPA and above',
+      },
+    ]
+    const {searchInput, activeEmploymentId, activeSalaryId} = this.state
     return (
       <div>
+        <Header />
         <div>
-          {this.renderAll()}
           <Filters
+            searchInput={searchInput}
+            activeEmploymentId={activeEmploymentId}
+            activeSalaryId={activeSalaryId}
             employmentTypesList={employmentTypesList}
             salaryRangesList={salaryRangesList}
             changeEmploymentType={this.changeEmploymentType}
             changeSalaryRange={this.changeSalaryRange}
+            changeSearchInput={this.changeSearchInput}
           />
+          {this.renderAll()}
         </div>
       </div>
     )
