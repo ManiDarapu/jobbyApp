@@ -22,9 +22,9 @@ class Filters extends Component {
     const jwtToken = Cookies.get('jwt_token')
     const url = 'https://apis.ccbp.in/profile'
     const options = {
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${jwtToken}`,
-        method: 'GET',
       },
     }
     const response = await fetch(url, options)

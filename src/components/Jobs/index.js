@@ -36,8 +36,8 @@ class Jobs extends Component {
     const options = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
-        method: 'GET',
       },
+      method: 'GET',
     }
     const response = await fetch(apiUrl, options)
     if (response.ok) {
@@ -135,15 +135,15 @@ class Jobs extends Component {
   }
 
   changeEmploymentType = activeEmploymentId => {
-    this.setState({activeEmploymentId}, this.getJobs())
+    this.setState({activeEmploymentId}, this.getJobs)
   }
 
   changeSalaryRange = activeSalaryId => {
-    this.setState({activeSalaryId}, this.getJobs())
+    this.setState({activeSalaryId}, this.getJobs)
   }
 
   changeSearchInput = value => {
-    this.setState({searchInput: value}, this.getJobs())
+    this.setState({searchInput: value}, this.getJobs)
   }
 
   render() {
