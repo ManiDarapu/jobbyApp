@@ -42,7 +42,8 @@ class Jobs extends Component {
     const response = await fetch(apiUrl, options)
     if (response.ok) {
       const data = await response.json()
-      const updatedData = data.map(each => ({
+      const reqData = data.jobs
+      const updatedData = reqData.map(each => ({
         companyLogoUrl: each.company_logo_url,
         employmentType: each.employment_type,
         id: each.id,
@@ -52,6 +53,7 @@ class Jobs extends Component {
         rating: each.rating,
         title: each.title,
       }))
+      console.log(updatedData)
       this.setState({
         jobsList: updatedData,
         apiStatus: apiStatusConstants.success,
@@ -85,33 +87,36 @@ class Jobs extends Component {
       <div>
         <div>
           <ul>
-            {jobsList.map(each => (
-              <li onClick={<JobItemDetails id={each.id} />}>
-                <div>
-                  <img src={each.companyLogoUrl} alt="company" />
+            {jobsList.map(each => {
+              const getJobItemDetails = () => <JobItemDetails id={each.id} />
+              return (
+                <li key={each.id} onClick={getJobItemDetails}>
                   <div>
-                    <h1>{each.title}</h1>
+                    <img src={each.companyLogoUrl} alt="company logo" />
                     <div>
-                      <AiFillStar />
-                      <p>{each.rating}</p>
+                      <h1>{each.title}</h1>
+                      <div>
+                        <AiFillStar />
+                        <p>{each.rating}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div>
                   <div>
-                    <MdLocationOn />
-                    <p>{each.location}</p>
-                    <p>{each.employmentType}</p>
+                    <div>
+                      <MdLocationOn />
+                      <p>{each.location}</p>
+                      <p>{each.employmentType}</p>
+                    </div>
+                    <p>{each.packagePerAnnum}</p>
                   </div>
-                  <p>{each.packagePerAnnum}</p>
-                </div>
-                <hr />
-                <div>
-                  <h1>Description</h1>
-                  <p>{each.jobDescription}</p>
-                </div>
-              </li>
-            ))}
+                  <hr />
+                  <div>
+                    <h1>Description</h1>
+                    <p>{each.jobDescription}</p>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         </div>
       </div>
