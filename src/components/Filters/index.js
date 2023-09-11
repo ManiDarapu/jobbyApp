@@ -48,9 +48,13 @@ class Filters extends Component {
     </div>
   )
 
+  retryApi = () => this.getProfile()
+
   renderFailureView = () => (
     <div>
-      <button type="button">Retry</button>
+      <button type="button" onClick={this.retryApi}>
+        Retry
+      </button>
     </div>
   )
 
@@ -85,12 +89,14 @@ class Filters extends Component {
     return employmentTypesList.map(each => {
       const {changeEmploymentType} = this.props
       const onClickEmploymentType = () => {
-        changeEmploymentType(each.id)
+        changeEmploymentType(each.employmentTypeId)
       }
       return (
         <li onClick={onClickEmploymentType} key={each.employmentTypeId}>
-          <input type="checkbox" id="check" value={each.label} />
-          <label htmlFor="check">{each.label}</label>
+          <label>
+            <input type="checkbox" name="checkbox" value={each.label} />
+            {each.label}
+          </label>
         </li>
       )
     })
@@ -101,12 +107,14 @@ class Filters extends Component {
     return salaryRangesList.map(each => {
       const {changeSalaryRange} = this.props
       const onClickSalaryRange = () => {
-        changeSalaryRange(each.id)
+        changeSalaryRange(each.salaryRangeId)
       }
       return (
         <li onClick={onClickSalaryRange} key={each.salaryRangeId}>
-          <label htmlFor="radio">{each.label}</label>
-          <input type="radio" id="radio" value={each.label} />
+          <label>
+            <input type="radio" name="radio" value={each.label} />
+            {each.label}
+          </label>
         </li>
       )
     })
@@ -121,8 +129,8 @@ class Filters extends Component {
       <div>
         {this.renderProfile()}
         <button type="button" data-testid="searchButton">
-          <input type="search" onChange={onChangeSearch} />
-          <AiOutlineSearch />
+          <input type="search" />
+          <AiOutlineSearch onClick={onChangeSearch} />
         </button>
         <hr />
         <div>
